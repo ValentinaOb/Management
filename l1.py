@@ -18,9 +18,9 @@ data1 = np.array([])
 data2 = np.array([])
 
 # Create empty plots
-line, = ax.plot([], [], label="Data")
+line, = ax.plot([], [], label="Y")
 line1, = ax.plot([], [], label="X")
-line2, = ax.plot([], [], label="Y")
+line2, = ax.plot([], [], label="U")
 
 ax.set_xlabel('Time (ms)')
 ax.set_ylabel('Data')
@@ -35,10 +35,10 @@ S = 0
 
 while True:
     t += dt
-    new_data = float(5 - math.exp(-t))
+    y = float(5 - math.exp(-t))
 
     # Append new data
-    data = np.append(data, new_data)
+    data = np.append(data, y)
     time = np.append(time, t)
 
     u0 = u1
@@ -47,14 +47,13 @@ while True:
     x0 = x1
     x_1 = x0
 
-    e = 5 - math.exp(-t)
-    S += dt * (math.exp(-t) - x0)
+    S += dt * (y - x0)
 
-    u1 = 0.6 * ((e - x0)) + 6 * S + 0.1 * math.exp(-t) - 0.1 * ((x1 - x0) / dt)
+    u1 = 0.6 * ((y - x0)) + 6 * S + 0.1 * y + 0.1 * ((x1 - x0) / dt)
     u_ = (u1 - u0) / dt
     
     x1 = 6 * x0 + (5 / t * (x1 - x0)) + (1 / t**2 * (x1 - 2 * x0 + x_1)) - 0.1 * u_
-
+    print("Y: ",y,"S: ",S, "U1: ",u1,"U_: ",u_, "X1: ",x1)
     data1 = np.append(data1, x1)
     data2 = np.append(data2, u1)
 
