@@ -1,6 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog, scrolledtext
-from tkinter import ttk
+from tkinter import filedialog, scrolledtext, ttk
 
 
 

@@ -7,7 +7,7 @@ plt.ion()
 
 # Create figure and axis
 fig, ax = plt.subplots()
-ax.set_ylim([-100, 100])  
+ax.set_ylim([-500, 500])  
 ax.set_xlim([0, 100])
 ax.grid(True)
 
@@ -28,9 +28,9 @@ ax.set_title('Real-time Data Plot')
 ax.legend()
 
 t =0  # Start with a small nonzero value
-dt = 1
+dt = 0.1
 x1 = x0 = x_1 = 0
-u1 = u_1 = 0
+u1 = u0 = u_1 = 0
 S = 0
 
 while True:
@@ -41,15 +41,17 @@ while True:
     data = np.append(data, y)
     time = np.append(time, t)
 
-    u0 = u1
+    
     u_1 = u0
+    u0 = u1
 
-    x0 = x1
     x_1 = x0
+    x0 = x1
 
     S += dt * (y - x0)
 
-    u1 = 0.6 * ((y - x0)) + 6 * S + 0.1 * y + 0.1 * ((x1 - x0) / dt)
+    #u1 = 0.6 * ((y - x0)) + 6 * S + 0.1 * y + 0.1 * ((x1 - x0) / dt)
+    u1 = 0.6 * ((y - x0)) + 6 * S + 0.1 * y + 0.1 * ((y - x0) / dt)
     u_ = (u1 - u0) / dt
     
     x1 = 6 * x0 + (5 / t * (x1 - x0)) + (1 / t**2 * (x1 - 2 * x0 + x_1)) - 0.1 * u_
