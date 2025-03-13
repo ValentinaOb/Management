@@ -6,38 +6,59 @@ p,q,n,E,D=3,11,33,7,3
 #Encr M^E mod N = Cipher     |   Cipher^D mod N = M
 #Encr with Public Key (E), Decript with Private key(D)
 #60^E mod n = X    | X^D mod n =60
+
 T=(p-1)*(q-1)
 
-M=2
-DE=1%E
-C=2**E%n
-X=(C**p)%n
-
-alphabet = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-small = alphabet.lower().split(' ')
-new_el=[]
+#DE=1%E
+#C=2**E%n
+#X=(C**p)%n
+cipher=[]
+message=[]
+h=[]
 
 
 def encrypt(m):
-    cipher = m**E %n
+    if len(m)!=1:
+        for i in m:
+            cipher.append(i**E %n)
+    else: 
+        cipher.append(m[0]**E %n)
+
     return cipher
 
 def decrypt(cipher):
-    message = cipher**D %n
+    if len(cipher)!=1:
+        for i in cipher:
+            message.append(i**D %n)
+    else:
+        message.append(cipher[0]**D %n)
     return message
     
-def hash_alg():
-    k=-1
-    sum=0
-    for i in range (26):
-        k+=1
-        sum+=k
-    h=sum%n
+def hash_alg(m):
+    #h=sum(int(digit) for digit in str(i))
+    h=sum(m)
     return h
+
+def sign(m):
+    P=[]
+    if len(m)!=1:
+        for i in m:
+            P.append(i**E %n)
+    else:
+        P.append(m[0]**E %n)
+    return P
+
+def is_sign(P):
+    new=[]
+    if len(P)!=1:
+        for i in P:
+            new.append(i**D %n)
+    return new
 
 
 f = open("RSA.txt", "r")
-M=int(f.read())
+M= list(map(int, (f.read().split(' '))))
+
 f.close()
 '''M=60
 E=29
@@ -47,20 +68,48 @@ n=p*q'''
 
 print('Message: ',M)
 
-
 cipher=encrypt(M)
 print('cipher: ',cipher)
 
-message = decrypt(cipher)
-print('message: ',message)
-
-h=hash_alg()
+h=hash_alg(M)
 print('Hash: ',h)
 
+
+P=sign(M)
+print('P: ',P)
 
 #print(60**29 %133)
 #print(86**41 %133)
 
 f = open("RSA.txt", "w")
-f.write(str(message))
+
+data=' '.join(str(x) for x in M)+' : '+' '.join(str(x) for x in P)
+f.write(data)
+f.close()
+
+
+# !!!
+print('\n')
+
+f = open("RSA.txt", "r")
+d=f.read().split(' : ')
+print('D: ', list(map(int,d[0].split(' '))))
+M, P=list(map(int,d[0].split(' '))), list(map(int,d[1].split(' ')))
+f.close()
+
+#P=[3]
+
+M1=is_sign(P)
+print('M: ',M,', M1: ',M1, '  -  ',M==M1)
+
+message = decrypt(cipher)
+print('De. Message: ',message)
+
+h1=hash_alg(message)
+print('Hash1: ',h1)
+
+print('Hash ? Hash1   -   ',h==h1)
+
+f = open("RSA.txt", "w")
+f.write(' '.join(str(x) for x in M))
 f.close()
