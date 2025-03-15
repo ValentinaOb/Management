@@ -53,6 +53,9 @@ def is_sign(P):
     if len(P)!=1:
         for i in P:
             new.append(i**D %n)
+    else:
+        new.append(P[0]**D %n)
+    
     return new
 
 
@@ -93,7 +96,6 @@ print('\n')
 
 f = open("RSA.txt", "r")
 d=f.read().split(' : ')
-print('D: ', list(map(int,d[0].split(' '))))
 M, P=list(map(int,d[0].split(' '))), list(map(int,d[1].split(' ')))
 f.close()
 

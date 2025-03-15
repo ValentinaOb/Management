@@ -44,7 +44,7 @@ ax.legend()
 ax.grid()
 
 t = 0
-dt = 0.001
+dt = 0.005
 while True:
     y_d = 5 - np.exp(-t)
     e = y_d - x[0]
