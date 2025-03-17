@@ -1,15 +1,6 @@
-p=1011
-a=10
-
-
-def fermat_little_theorem(a, p):
-    # a^(p-1) ≡ 1 (mod p)
-    if p > 1 and is_prime(p) and a % p != 0:
-        return pow(a, p-1, p) == 1
-    return False
+import random
 
 def is_prime(n):
-    #Simple check if n is a prime number
     if n < 2:
         return False
     for i in range(2, int(n ** 0.5) + 1):
@@ -17,21 +8,62 @@ def is_prime(n):
             return False
     return True
 
+def find_primitive_root(p):
+    required_set = {num for num in range(1, p) if pow(num, p - 1, p) == 1}
+    for g in range(2, p):
+        generated_set = {pow(g, powers, p) for powers in range(1, p)}
+        if required_set == generated_set:
+            return g
+    return None
 
-a=fermat_little_theorem(a, p)
-print('Fermats theorem: ', a)
+def gcd(a, b):
+    # GCD (Greatest common divisor)
+    while b:
+        a, b = b, a % b
+    return a
+
+def diffie_hellman_key_exchange():
+    #Diffie–Hellman (DH) key exchange
+
+    while True:
+        p = random.randint(1000, 9999)
+        if is_prime(p):
+            break
+    
+
+    a = find_primitive_root(p)
+    if a is None:
+        return "None a"
+    
+    print(f"P: {p}")
+    print(f"A: {a}")
+    
+
+    x = random.randint(2, 9999)  # secret key for A
+    y = random.randint(2, 9999)  # secret key for B
+    
+    
+    X = pow(a, x, p)  # A send B (public keys)
+    Y = pow(a, y, p)  # B send A (public keys)
+    
+    
+    k = pow(Y, x, p)  # A calculate common key
+    k1 = pow(X, y, p)  # B calculate common key
+    
+    print('Secret key A, x: ', x)
+    print('Secret key B, y: ', y)
+    
+    print('Public key A, X: ', X)
+    print('Public key B, Y: ', Y)
+
+    print('Common key A, k: ', k)
+    print('Common key B, k1: ', k1)
+
+    
+    if k == k1:
+        print("Successfully")
+    else:
+        print('! Error !')
 
 
-# B get
-x=4
-X=a**x %p
-k1=X**y %p
-
-#A get
-y=2
-Y=a**y %p
-k=Y**x %p
-
-
-print('k: ', k, '  k1: ',k1, '  a**(x*y) %p: ',a**(x*y) %p)
-print('k = k1 = a**(xy) %p: ', k==k1==a**(x*y) %p)
+diffie_hellman_key_exchange()
