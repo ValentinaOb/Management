@@ -6,10 +6,16 @@ d0, d1, d2 = 1, 5, 6
 
 a, b, c = 0.6, 0.3, 0.1
 
-def pid_control(e, e_prev, e_sum, dt):
-    u_ = (e - e_prev) / dt
+n, m, r = 5, 1, 100 
+
+k = 1.0  
+
+def adaptive_control(e, e_prev, e_sum, dt):
+    global k
+    de = (e - e_prev) / dt
     e_sum += e * dt
-    u0 = a * e + b * u_ + c * e_sum
+    k += n * e * dt  
+    u0 = k * (m * e + r * de)
     return u0, e_sum
 
 x_1, x0, x1, u_1, u0 = 0,0,0, 0,0
@@ -33,7 +39,7 @@ while True:
     e = y_d - x0
 
     u_1=u0
-    u0, e_sum = pid_control(e, e_prev, e_sum, dt)
+    u0, e_sum = adaptive_control(e, e_prev, e_sum, dt)
 
     x_1=x0
     x0=x1

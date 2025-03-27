@@ -49,6 +49,7 @@ def server_run():
         server.close()
 
 def register_user(user_id):
+    cursor.execute("DELETE FROM sec_user_files;")
     cursor.execute("DELETE FROM sec_pswd_users;")
     passwords = [str(random.getrandbits(64)) for _ in range(5)]
     
